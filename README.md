@@ -1,62 +1,68 @@
-# Polygon-Advanced-Module-1
+# NFT Minting and Bridging Project
 
-This is the first project in Polygon-Advance, in this project, I was tasked to deploy an NFT collection on the Ethereum blockchain, Map the collection to Polygon, and Transfer assets over via the Polygon Bridge.
+This project involves generating a 5-item collection of images using DALLE 2, storing the items on IPFS using pinata.cloud, deploying an ERC721 contract to the Goerli Ethereum Testnet, and then bridging the NFTs from Ethereum to Polygon Mumbai using the FxPortal Bridge. The ERC721 contract will also have a function to retrieve the prompt used to generate the images.
 
-## Getting Started
+## Prerequisites
 
-### Executing program
+Before running the scripts, make sure you have the following set up:
 
-Download the codes by downloading the entire repository which will give you access to other contents of the repository. Navigate to the Poly_Proof project directory,  run:
+- Node.js and npm installed on your machine.
+- Hardhat development environment set up.
 
-```shell
+## Setup
 
- npm install
+1. Clone the project repository.
+2. Install the project dependencies by running `npm install` in the project directory.
 
+## DALLE 2 and IPFS
+
+1. Use DALLE 2 to generate a 5-item collection of images.
+2. Upload the images to IPFS using pinata.cloud.
+3. Update the `baseUrl` variable in the `NFT.sol` contract with the IPFS base URL where the images are stored.
+
+## Deploy ERC721A Contract
+
+1. Update the contract name and symbol as needed in the `NFT.sol` contract.
+2. Run the deployment script `deploy.js` to deploy the ERC721A contract to the Goerli Ethereum Testnet.
+
+```bash
+npx hardhat run scripts/deploy.js --network goerli
 ```
 
-After installing the dependencies, run the test file by using the following command:
+3. Note down the deployed contract address.
 
-```shell
-npx hardhat test
+## Batch Mint NFTs
+
+1. Run the batch minting script `batchMint.js` to mint 5 NFTs using the deployed contract address and your private key.
+
+```bash
+ npx hardhat run scripts/batchMint.js --network goerli
 ```
 
-### Deploying the ERC721 Contract
+## Batch Transfer NFTs to Polygon Mumbai
 
-Before deploying, make sure to rename ".env.example" to ".env" and provide your wallet private key where required i.e. "PRIVATE_KEY= 'your wallet private key'". Run the following command to deploy the ERC721 contract to the Goerli Ethereum Testnet:
+1. Run the batch transfer script `batchTransferNft.js` to transfer the minted NFTs from Ethereum to Polygon Mumbai using the FxPortal Bridge.
 
-``` shell
-npx hardhat run scripts/deploy.js --network goerli 
-```
-## NOTE:
-After deploying the address will generate. So, copy that address into `contarctAddress.js`(stored in metadata folder) and also in `batchMint.js`(stored in scripts folder)
-
- 
-The script will deploy the contract 
-### Batch Mint NFTs
-
-Run the following command to batch-mint NFTs using the deployed ERC721 contract:
-
-``` shell
-npx hardhat run scripts/batchMint.js --network goerli
+```bash
+npx hardhat run scripts/batchTransferNft.js --network goerli
 ```
 
-The script will mint the specified number of NFTs and assign them to your address.
+2. The script will approve the NFTs for transfer and then deposit them to the FxPortal Bridge.
 
-### Approve and Deposit NFTs to Polygon Mumbai
+## Check Mumbai Balance
 
-Run the following commands to approve and deposit the minted NFTs from Ethereum to the Polygon Mumbai network using the FxPortal Bridge:
+1. After the bridging process is completed, you can check the balance of the NFTs on the Polygon Mumbai network.
 
-```shell
-npx hardhat run scripts/approveDeposit.js --network goerli
-```
+## ERC721A Contract Functions
 
+The ERC721A contract has the following functions:
 
+- `mint(uint256 quantity)`: Allows the contract owner to mint NFTs. Only the contract owner can execute this function.
+- `promptDescription()`: Returns an array of strings containing the prompt descriptions used to generate the NFT images.
 
-## Author
+## Note
 
+- Make sure to add a .env file and add your account's Private Key in the file.
+- You can customize the number of NFTs to be minted and the base URL for the images in the `batchMint.js` script and the `NFT.sol` contract, respectively.
 
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-You can make a copy of the project to use for your own purposes.
+Please ensure that you are running these scripts on testnets for experimentation purposes only. Do not use real assets or private keys on testnets. Additionally, ensure that you have enough testnet tokens for gas fees while running these scripts.
